@@ -33,15 +33,5 @@ router.get('/getAllCommentbyPost/:postId',authMiddleware,async (req,res)=>{
         }
 })
 
-router.delete('/deleteCommentBypostOwnner',authMiddleware,async(req,res)=>{
-        const user=req.user.email;
-        console.log(user);
-        
-        
-});
-
-router.delete('/deleteMycomment',authMiddleware,async(req,res)=>{
-
-})
 
 module.exports = router;
