@@ -20,7 +20,7 @@ mongoose.connect(mongo,{
 
 const studentRoutes=require("./routes/studentRoutes");
 const postRoutes=require("./routes/postRoutes")
-
+const commentRoutes=require("./routes/commentRoutes");
 
 // app.use(
 //     cors({
@@ -40,7 +40,7 @@ const postRoutes=require("./routes/postRoutes")
 
 app.use('/student',studentRoutes);
 app.use('/posts',postRoutes);
-
+app.use('/comment',commentRoutes);
 app.listen(port,()=>{
     console.log(`our server is live on ${port}`);
     
