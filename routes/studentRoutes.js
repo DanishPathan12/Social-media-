@@ -4,19 +4,18 @@ const router = express.Router();
 const multer = require("multer");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const storage = require("../utils/storage");
+const storage=require("../utils/storage");
 const sendEmail=require("../utils/mail");
 
-
-const upload = multer({ storage });
+const upload=multer({storage});
 
 router.post("/register", upload.single("photo"), async (req, res) => {
   try {
-    const { name, email, age, phone, address, password } = req.body;
+    const { username, firstname,lastname,email, age, phone, address, password } = req.body;
     
     
 
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
       return res.status(400).json({ msg: "Either email, password, or name is missing" });
   }
   
@@ -28,7 +27,9 @@ router.post("/register", upload.single("photo"), async (req, res) => {
     const otp = Math.floor(1000 + Math.random() * 9000).toString();
 
     const newStudent = new Student({
-      name,
+      username,
+      firstname,
+      lastname,
       age,
       email,
       phone,

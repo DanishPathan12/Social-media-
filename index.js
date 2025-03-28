@@ -41,6 +41,8 @@ const commentRoutes=require("./routes/commentRoutes");
 app.use('/student',studentRoutes);
 app.use('/posts',postRoutes);
 app.use('/comment',commentRoutes);
+
+
 app.listen(port,()=>{
     console.log(`our server is live on ${port}`);
     

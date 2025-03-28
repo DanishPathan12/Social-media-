@@ -14,7 +14,7 @@ const upload=multer({storage});
 router.post('/createPost',authMiddleware,upload.single('photo'),async (req,res)=>{
     try {
         const {title,Des}=req.body;
-        const user= req.user._id;
+        const user= req.user.username;
         
         const photopath=req.file ? req.file.path : null;
         const newPost=new Post({
@@ -78,7 +78,6 @@ router.delete('/deletePost/:postId',authMiddleware,async (req,res)=>{
     }
  
 })
-
 
 
 module.exports=router;
