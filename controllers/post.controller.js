@@ -1,70 +1,71 @@
 
-const Post=require("../models/post");
+const Post = require("../models/post");
 
 
-const CreatePost=async (req,res)=>{
+const CreatePost = async (req, res) => {
     try {
-        const {title,Des}=req.body;
-        const user= req.user.username;
-        
-        const photopath=req.file ? req.file.path : null;
-        const newPost=new Post({
-            title,Des,photo:photopath ,
-            createdBy:user,
+        const { title, Des } = req.body;
+        const user = req.user.username;
+
+        const photopath = req.file ? req.file.path : null;
+        const newPost = new Post({
+            title, Des, photo: photopath,
+            createdBy: user,
 
         });
         await newPost.save();
-        res.status(201).json({msg:"post is created",post:newPost});
+        res.status(201).json({ msg: "post is created", post: newPost });
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const GetPost=async (req,res)=>{
-    try {        
-        const allPost= await Post.find({})
+const GetPost = async (req, res) => {
+    try {
+        const allPost = await Post.find({})
         res.json(allPost);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
-        
+
     }
 }
 
-const GetPostbyMe=async (req,res)=>{
+const GetPostbyMe = async (req, res) => {
     try {
-        const User= req.user._id;
+        const User = req.user._id;
         // just declare user variable from the authmiddleware and req.user[0] ref to _id used it to query it 
-        const allPost= await Post.find({createdBy:User})
+        
+        const allPost = await Post.find({ createdBy: User })
         res.json(allPost);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal Server Error" });
-        
+
     }
 }
 
-const DeletePost=async (req,res)=>{
+const DeletePost = async (req, res) => {
     try {
-        const user=req.user._id;
-        const {postId}=req.params;
-                
+        const user = req.user._id;
+        const { postId } = req.params;
+
         if (!postId) {
-            return res.status(400).json({msg:"post ID is required"});
+            return res.status(400).json({ msg: "post ID is required" });
         }
-        const deletePost=await Post.findOneAndDelete({_id:postId,createdBy:user});
+        const deletePost = await Post.findOneAndDelete({ _id: postId, createdBy: user });
 
         if (!deletePost) {
             return res.status(404).json({ message: "Post not found or unauthorized" });
         }
-        res.status(200).json({msg:"post deleted "})
+        res.status(200).json({ msg: "post deleted " })
     } catch (error) {
         res.status(500);
         console.log(error.message);
-        
+
     }
- 
+
 }
 
-module.exports={CreatePost,GetPost,GetPostbyMe,DeletePost};
+module.exports = { CreatePost, GetPost, GetPostbyMe, DeletePost };
