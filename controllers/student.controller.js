@@ -112,27 +112,36 @@ const VerifyOtp = async (req, res) => {
     }
 }
 
-const updateProfile=async (req,res)=>{
+const updateProfile = async (req, res) => {
     try {
-        const {firstname,lastname,age,phone,address,photo}=req.body;
-        const User=req.user.username;
-        const userUpdate=await Student.findOneAndUpdate({username:User},
-            {firstname,
-            lastname,
-            age,
-            phone,
-            address,
-            photo},
+        const { firstname, lastname, age, phone, address, photo } = req.body;
+        const User = req.user.username;
+        const isVerified=req.user.isVerified;
+        if (!isVerified) {
+            return res.status(400).json({ msg: "Please verify your email before update" });
+        }
+        const photoPath = req.file?.path || null;
+        
+        
+        const userUpdate = await Student.findOneAndUpdate({ username: User },
             {
-                new:true,runValidators:true
+                firstname,
+                lastname,
+                age,
+                phone,
+                address,
+                photo:photoPath,
+            },
+            {
+                new: true, runValidators: true
             }
         )
 
-        res.status(200).json({msg:userUpdate});
+        res.status(200).json({ msg: userUpdate });
     } catch (error) {
         console.log(error);
-        
+        res.status(500).json({msg:"internal server error"})
     }
 }
 
-module.exports = { Register, Login, VerifyOtp ,updateProfile}
+module.exports = { Register, Login, VerifyOtp, updateProfile }
