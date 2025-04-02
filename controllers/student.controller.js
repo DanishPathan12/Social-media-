@@ -112,4 +112,27 @@ const VerifyOtp = async (req, res) => {
     }
 }
 
-module.exports = { Register, Login, VerifyOtp }
+const updateProfile=async (req,res)=>{
+    try {
+        const {firstname,lastname,age,phone,address,photo}=req.body;
+        const User=req.user.username;
+        const userUpdate=await Student.findOneAndUpdate({username:User},
+            {firstname,
+            lastname,
+            age,
+            phone,
+            address,
+            photo},
+            {
+                new:true,runValidators:true
+            }
+        )
+
+        res.status(200).json({msg:userUpdate});
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+module.exports = { Register, Login, VerifyOtp ,updateProfile}

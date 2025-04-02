@@ -34,7 +34,7 @@ const GetPost = async (req, res) => {
 
 const GetPostbyMe = async (req, res) => {
     try {
-        const User = req.user._id;
+        const User = req.user.username;
         // just declare user variable from the authmiddleware and req.user[0] ref to _id used it to query it 
         
         const allPost = await Post.find({ createdBy: User })
@@ -48,14 +48,14 @@ const GetPostbyMe = async (req, res) => {
 
 const DeletePost = async (req, res) => {
     try {
-        const user = req.user._id;
+        const user = req.user.username;
         const { postId } = req.params;
 
         if (!postId) {
             return res.status(400).json({ msg: "post ID is required" });
         }
         const deletePost = await Post.findOneAndDelete({ _id: postId, createdBy: user });
-
+        
         if (!deletePost) {
             return res.status(404).json({ message: "Post not found or unauthorized" });
         }
