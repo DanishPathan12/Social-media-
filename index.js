@@ -10,7 +10,7 @@ require('dotenv').config();
 app.use(cors());
 
 
-const mongo='mongodb://localhost:27017/multer-db'
+const mongo=process.env.MONGO
 mongoose.connect(mongo,{
     
 }).then(()=>{
@@ -24,7 +24,7 @@ const commentRoutes=require("./routes/commentRoutes");
 
 app.use(
     cors({
-      origin: "http://localhost:5173",
+      origin: process.env.FRONTENDBASEURL,
       credentials: true, // Allow cookies, authentication headers
       methods: "GET,POST,PUT,DELETE", // Allowed request methods
     })
