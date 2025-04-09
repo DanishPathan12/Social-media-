@@ -9,7 +9,7 @@ const CreatePost = async (req, res) => {
 
         const photopath = req.file ? req.file.path : null;
         const newPost = new Post({
-            title, Des, photo: photopath,
+            title, Des, photoPost: photopath,
             createdBy: user,
 
         });
