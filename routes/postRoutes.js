@@ -4,7 +4,7 @@ const multer = require("multer");
 const authMiddleware = require("../middlewares/authmiddleware");
 const storage = require("../utils/storage");
 const { CreatePost, GetPostbyMe, DeletePost,GetPost, updatePost } = require("../controllers/post.controller.js")
-const addlike=require("../controllers/post.controller.js");
+const {addlike}=require("../controllers/post.controller.js");
 
 
 const upload = multer({ storage });
