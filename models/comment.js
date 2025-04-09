@@ -3,15 +3,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
-    postId: { 
-        type: mongoose.Schema.Types.ObjectId, 
+    postId: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Post",
-        required: true 
+        required: true
     },
-    commentedBy: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Student", 
-        required: true 
+    commentedBy: {
+        type: String,
+        ref: "Student",
+        required: true
     },
     text: { type: String, required: true },
 }, { timestamps: true });

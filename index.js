@@ -39,7 +39,7 @@ app.use(
 
 
 app.use('/student',studentRoutes);
-app.use('/posts',postRoutes);
+app.use('/post',postRoutes);
 app.use('/comment',commentRoutes);
 
 

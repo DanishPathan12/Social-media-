@@ -79,7 +79,7 @@ const updatePost=async (req,res) => {
         if (!postId) {
             return res.status(400).json({ msg: "post ID is required" });
         }
-        const updatePost=await Post.findByIdAndUpdate(
+        const updatePost=await Post.findOneAndUpdate(
             {   _id:postId,
                 createdBy:user,
             },{
@@ -99,4 +99,39 @@ const updatePost=async (req,res) => {
     }
 }
 
-module.exports = { CreatePost, GetPost, GetPostbyMe, DeletePost,updatePost };
+const addlike = async (req, res) => {
+    try {
+        const { postId } = req.body;
+        const username = req.user.username;
+        const post = await Post.findOne({ _id: postId });
+
+        if (!post) {
+            return res.status(404).json({ msg: "Post not found" });
+        }
+
+        if (post.likedBy.includes(username)) {
+            return res.status(400).json({ msg: "You have already liked this post" });
+        }
+
+        const addLike = await Post.findOneAndUpdate(
+            { _id: postId },
+            {
+                $inc: { likes: 1 },
+                $push: { likedBy: username },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({ msg: "Post liked successfully", post: addLike });
+    } catch (error) {
+        res.status(500).json({ msg: "Something went wrong" });
+        console.log(error);
+    }
+};
+
+
+
+
+
+
+module.exports = { CreatePost, GetPost, GetPostbyMe, DeletePost,updatePost,addlike};

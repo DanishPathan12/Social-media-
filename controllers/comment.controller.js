@@ -1,13 +1,14 @@
+const comment = require("../models/comment");
 const Comment=require("../models/comment");
 const Post=require("../models/post");
 const AddComment = async (req,res)=>{
     try {
         const {postId,text}=req.body;
-        const userId=req.user._id;
+        const user=req.user.username;
 
         const newComment=new Comment({
             postId,
-            commentedBy:userId,
+            commentedBy:user,
             text
         })
         await newComment.save();
@@ -15,6 +16,8 @@ const AddComment = async (req,res)=>{
         
     } catch (error) {
         res.status(500).json({error:"Error adding Comment"});
+        console.log(error);
+        
     }
 
 }

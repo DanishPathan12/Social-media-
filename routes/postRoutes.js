@@ -4,6 +4,7 @@ const multer = require("multer");
 const authMiddleware = require("../middlewares/authmiddleware");
 const storage = require("../utils/storage");
 const { CreatePost, GetPostbyMe, DeletePost,GetPost, updatePost } = require("../controllers/post.controller.js")
+const addlike=require("../controllers/post.controller.js");
 
 
 const upload = multer({ storage });
@@ -18,5 +19,7 @@ router.get('/getPostbyMe', authMiddleware, GetPostbyMe);
 router.delete('/deletePost/:postId', authMiddleware, DeletePost);
 
 router.put('/updatePost/:postId',authMiddleware,upload.single('photoPost'),updatePost);
+
+router.put('/addLike',authMiddleware,addlike);
 
 module.exports = router;
