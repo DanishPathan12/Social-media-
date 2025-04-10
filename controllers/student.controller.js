@@ -144,4 +144,20 @@ const updateProfile = async (req, res) => {
     }
 }
 
-module.exports = { Register, Login, VerifyOtp, updateProfile }
+const getMyProfile=async (req,res) => {
+   try {
+    const User=req.user.username;   
+    const user=await Student.find({username:User});
+
+    
+    if (!user) {
+         res.status(400).json({msg:"no user found"})
+     }
+    res.status(200).json({msg:user});
+   } catch (error) {
+    console.log(error);
+    
+   }
+}
+
+module.exports = { Register, Login, VerifyOtp, updateProfile,getMyProfile }
