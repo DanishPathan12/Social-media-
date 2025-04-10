@@ -49,7 +49,7 @@ const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Student.findOne({ email });
-
+        
         if (!user) {
             return res.status(400).json({ msg: "Email or password is incorrect" });
         }
@@ -64,7 +64,9 @@ const Login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id },
+            { userId: user._id ,
+                user:user.username
+            },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -142,6 +144,15 @@ const updateProfile = async (req, res) => {
         console.log(error);
         res.status(500).json({msg:"internal server error"})
     }
+}
+
+const getPreimiumAccount=async (req,res) => {
+        try {
+            const payment=req.payment
+        } catch (error) {
+            
+        }    
+    
 }
 
 module.exports = { Register, Login, VerifyOtp, updateProfile }
