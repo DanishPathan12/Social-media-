@@ -49,6 +49,7 @@ const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Student.findOne({ email });
+        console.log(user);
         
         if (!user) {
             return res.status(400).json({ msg: "Email or password is incorrect" });
@@ -65,7 +66,7 @@ const Login = async (req, res) => {
 
         const token = jwt.sign(
             { userId: user._id ,
-                user:username
+                user:user.username
             },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
