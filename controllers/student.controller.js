@@ -65,7 +65,7 @@ const Login = async (req, res) => {
 
         const token = jwt.sign(
             { userId: user._id ,
-                user:user.username
+                user:username
             },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
@@ -146,13 +146,20 @@ const updateProfile = async (req, res) => {
     }
 }
 
-const getPreimiumAccount=async (req,res) => {
-        try {
-            const payment=req.payment
-        } catch (error) {
-            
-        }    
-    
-}
+const getMyProfile=async (req,res) => {
+    try {
+     const User=req.user.username;   
+     const user=await Student.find({username:User});
+ 
+     
+     if (!user) {
+          res.status(400).json({msg:"no user found"})
+      }
+     res.status(200).json({msg:user});
+    } catch (error) {
+     console.log(error);
+     
+    }
+ }
 
-module.exports = { Register, Login, VerifyOtp, updateProfile }
+module.exports = { Register, Login, VerifyOtp, updateProfile,getMyProfile }
