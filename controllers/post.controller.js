@@ -119,7 +119,7 @@ const addlike = async (req, res) => {
                 $inc: { likes: 1 },
                 $push: { likedBy: username },
             },
-            { new: true }
+            { new: true }   
         );
 
         res.status(200).json({ msg: "Post liked successfully", post: addLike });

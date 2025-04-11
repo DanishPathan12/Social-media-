@@ -49,7 +49,7 @@ const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Student.findOne({ email });
-
+        
         if (!user) {
             return res.status(400).json({ msg: "Email or password is incorrect" });
         }
@@ -64,7 +64,9 @@ const Login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id },
+            { userId: user._id ,
+                user:user.username
+            },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -145,6 +147,7 @@ const updateProfile = async (req, res) => {
 }
 
 const getMyProfile=async (req,res) => {
+<<<<<<< HEAD
    try {
     const User=req.user.username;   
     const user=await Student.find({username:User});
@@ -159,5 +162,21 @@ const getMyProfile=async (req,res) => {
     
    }
 }
+=======
+    try {
+     const User=req.user.username;   
+     const user=await Student.find({username:User});
+ 
+     
+     if (!user) {
+          res.status(400).json({msg:"no user found"})
+      }
+     res.status(200).json({msg:user});
+    } catch (error) {
+     console.log(error);
+     
+    }
+ }
+>>>>>>> dev
 
 module.exports = { Register, Login, VerifyOtp, updateProfile,getMyProfile }
