@@ -147,22 +147,6 @@ const updateProfile = async (req, res) => {
 }
 
 const getMyProfile=async (req,res) => {
-<<<<<<< HEAD
-   try {
-    const User=req.user.username;   
-    const user=await Student.find({username:User});
-
-    
-    if (!user) {
-         res.status(400).json({msg:"no user found"})
-     }
-    res.status(200).json({msg:user});
-   } catch (error) {
-    console.log(error);
-    
-   }
-}
-=======
     try {
      const User=req.user.username;   
      const user=await Student.find({username:User});
@@ -177,6 +161,5 @@ const getMyProfile=async (req,res) => {
      
     }
  }
->>>>>>> dev
 
 module.exports = { Register, Login, VerifyOtp, updateProfile,getMyProfile }
