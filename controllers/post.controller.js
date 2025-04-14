@@ -36,7 +36,7 @@ const GetPostbyMe = async (req, res) => {
     try {
         const User = req.user.username;
         // just declare user variable from the authmiddleware and req.user[0] ref to _id used it to query it 
-        
+
         const allPost = await Post.find({ createdBy: User })
         res.json(allPost);
     } catch (error) {
@@ -55,7 +55,7 @@ const DeletePost = async (req, res) => {
             return res.status(400).json({ msg: "post ID is required" });
         }
         const deletePost = await Post.findOneAndDelete({ _id: postId, createdBy: user });
-        
+
         if (!deletePost) {
             return res.status(404).json({ message: "Post not found or unauthorized" });
         }
@@ -69,33 +69,34 @@ const DeletePost = async (req, res) => {
 }
 
 
-const updatePost=async (req,res) => {
+const updatePost = async (req, res) => {
     try {
         const user = req.user.username;
         const { postId } = req.params;
-        const {title,Des}=req.body;
+        const { title, Des } = req.body;
         const photoPath = req.file?.path || null;
-        
+
         if (!postId) {
             return res.status(400).json({ msg: "post ID is required" });
         }
-        const updatePost=await Post.findOneAndUpdate(
-            {   _id:postId,
-                createdBy:user,
-            },{
-                title,
-                Des,
-                photoPost:photoPath,
-            },
+        const updatePost = await Post.findOneAndUpdate(
             {
-                new:true,runValidators:true
+                _id: postId,
+                createdBy: user,
+            }, {
+            title,
+            Des,
+            photoPost: photoPath,
+        },
+            {
+                new: true, runValidators: true
             }
         )
-        res.status(200).json({msg:updatePost});
+        res.status(200).json({ msg: updatePost });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"internal server error"})
-        
+        res.status(500).json({ msg: "internal server error" })
+
     }
 }
 
@@ -110,28 +111,33 @@ const addlike = async (req, res) => {
         }
 
         if (post.likedBy.includes(username)) {
-            return res.status(400).json({ msg: "You have already liked this post" });
+            const removelike = await Post.findOneAndUpdate(
+                { _id: postId },
+                {
+                    $inc: { likes: -1 },
+                    $pull: { likedBy: username },
+                },
+                { new: true }
+            );
+
+            res.status(200).json({ msg: "Post liked successfully", post: removelike });
         }
+        else {
+            const addLike = await Post.findOneAndUpdate(
+                { _id: postId },
+                {
+                    $inc: { likes: 1 },
+                    $push: { likedBy: username },
+                },
+                { new: true }
+            );
 
-        const addLike = await Post.findOneAndUpdate(
-            { _id: postId },
-            {
-                $inc: { likes: 1 },
-                $push: { likedBy: username },
-            },
-            { new: true }   
-        );
-
-        res.status(200).json({ msg: "Post liked successfully", post: addLike });
+            res.status(200).json({ msg: "Post liked successfully", post: addLike });
+        }
     } catch (error) {
         res.status(500).json({ msg: "Something went wrong" });
         console.log(error);
     }
 };
 
-
-
-
-
-
-module.exports = { CreatePost, GetPost, GetPostbyMe, DeletePost,updatePost,addlike};
+module.exports = { CreatePost, GetPost, GetPostbyMe, DeletePost, updatePost, addlike };
