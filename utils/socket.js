@@ -3,6 +3,7 @@ const { Server } = require("socket.io")
 
 const httpServer = createServer();
 
-const io = new Server(httpServer, {
+const io = new Server(httpServer);
 
-});
+
+module.exports = io;

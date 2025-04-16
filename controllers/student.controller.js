@@ -49,7 +49,7 @@ const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await Student.findOne({ email });
-        
+
         if (!user) {
             return res.status(400).json({ msg: "Email or password is incorrect" });
         }
@@ -64,8 +64,9 @@ const Login = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user._id ,
-                user:user.username
+            {
+                userId: user._id,
+                user: user.username
             },
             process.env.JWT_SECRET,
             { expiresIn: "1d" }
@@ -118,13 +119,13 @@ const updateProfile = async (req, res) => {
     try {
         const { firstname, lastname, age, phone, address, photo } = req.body;
         const User = req.user.username;
-        const isVerified=req.user.isVerified;
+        const isVerified = req.user.isVerified;
         if (!isVerified) {
             return res.status(400).json({ msg: "Please verify your email before update" });
         }
         const photoPath = req.file?.path || null;
-        
-        
+
+
         const userUpdate = await Student.findOneAndUpdate({ username: User },
             {
                 firstname,
@@ -132,7 +133,7 @@ const updateProfile = async (req, res) => {
                 age,
                 phone,
                 address,
-                photo:photoPath,
+                photo: photoPath,
             },
             {
                 new: true, runValidators: true
@@ -142,24 +143,58 @@ const updateProfile = async (req, res) => {
         res.status(200).json({ msg: userUpdate });
     } catch (error) {
         console.log(error);
-        res.status(500).json({msg:"internal server error"})
+        res.status(500).json({ msg: "internal server error" })
     }
 }
 
-const getMyProfile=async (req,res) => {
+const getMyProfile = async (req, res) => {
     try {
-     const User=req.user.username;   
-     const user=await Student.find({username:User});
- 
-     
-     if (!user) {
-          res.status(400).json({msg:"no user found"})
-      }
-     res.status(200).json({msg:user});
-    } catch (error) {
-     console.log(error);
-     
-    }
- }
+        const User = req.user.username;
+        const user = await Student.find({ username: User });
 
-module.exports = { Register, Login, VerifyOtp, updateProfile,getMyProfile }
+
+        if (!user) {
+            res.status(400).json({ msg: "no user found" })
+        }
+        res.status(200).json({ msg: user });
+    } catch (error) {
+        console.log(error);
+
+    }
+}
+
+const follow = async (req, res) => {
+    try {
+        const { username } = req.body;
+        const mySelf = req.user.username;
+
+        if (!username) {
+            res.status(400).json({ msg: "user is required to get followed" });
+        }
+        const user = await Student.findOneAndUpdate({ username }, {
+            $addToSet: { follower: mySelf }
+        }, { new: true });
+        console.log(user);
+
+
+        const myself = await Student.findOneAndUpdate({ username: mySelf }, {
+            $addToSet: { following: mySelf }
+        }, { new: true });
+
+        res.status(200).json({
+            usermsg: user,
+            myuser: myself,
+        });
+
+
+    } catch (error) {
+        res.status(500).json({
+            msg: error.message
+        });
+    }
+}
+
+
+
+
+module.exports = { Register, Login, VerifyOtp, updateProfile, getMyProfile, follow }
