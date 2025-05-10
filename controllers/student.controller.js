@@ -1,7 +1,7 @@
 const Student = require("../models/student");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const sendEmail = require("../utils/mail");
+const { sendEmailforNewFollow, sendEmail } = require("../utils/mail");
 
 
 const Register = async (req, res) => {

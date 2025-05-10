@@ -21,7 +21,7 @@ mongoose.connect(mongo, {
 const studentRoutes = require("./routes/studentRoutes");
 const postRoutes = require("./routes/postRoutes")
 const commentRoutes = require("./routes/commentRoutes");
-
+const messageRoutes = require("./routes/messageRoutes.js");
 app.use(
   cors({
     origin: process.env.FRONTENDBASEURL,
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use('/student', studentRoutes);
 app.use('/post', postRoutes);
 app.use('/comment', commentRoutes);
-
+app.use('/msg', messageRoutes);
 
 app.listen(port, () => {
   console.log(`our server is live on ${port}`);
