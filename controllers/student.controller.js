@@ -174,18 +174,19 @@ const follow = async (req, res) => {
         const user = await Student.findOneAndUpdate({ username }, {
             $addToSet: { follower: mySelf }
         }, { new: true });
-        console.log(user);
 
 
         const myself = await Student.findOneAndUpdate({ username: mySelf }, {
-            $addToSet: { following: mySelf }
+            $addToSet: {
+                following: username
+            }
         }, { new: true });
+
 
         res.status(200).json({
             usermsg: user,
             myuser: myself,
         });
-        sendEmailforNewFollow({})
 
     } catch (error) {
         res.status(500).json({
