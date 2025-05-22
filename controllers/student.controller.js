@@ -1,7 +1,7 @@
 const Student = require("../models/student");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { sendEmailforNewFollow, sendEmail } = require("../utils/mail");
+const { sendEmail } = require("../utils/mail");
 
 
 const Register = async (req, res) => {
@@ -185,7 +185,7 @@ const follow = async (req, res) => {
             usermsg: user,
             myuser: myself,
         });
-
+        sendEmailforNewFollow({})
 
     } catch (error) {
         res.status(500).json({

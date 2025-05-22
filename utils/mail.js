@@ -25,15 +25,7 @@ async function sendEmail({ userEmail, otp }) {
   });
 }
 
-async function sendEmailforNewFollow({ userEmail, followedBy }) {
-  await transporter.sendMail({
-    from: '"Verification Team" <danishpathan7477@gmail.com>',
-    to: userEmail,
-    subject: "New Notification from CampusMedia",
-    text: `you are followed by ${followedBy}`,
-    html: `<p>you are followed by<b>${followedBy}`,
-  });
-}
 
 
-module.exports = { sendEmail, sendEmailforNewFollow };
+
+module.exports = { sendEmail };

@@ -24,7 +24,7 @@ const commentRoutes = require("./routes/commentRoutes");
 const messageRoutes = require("./routes/messageRoutes.js");
 app.use(
   cors({
-    origin: process.env.FRONTENDBASEURL,
+    origin: "*",
     credentials: true, // Allow cookies, authentication headers
     methods: "GET,POST,PUT,DELETE", // Allowed request methods
   })
