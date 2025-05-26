@@ -163,38 +163,107 @@ const getMyProfile = async (req, res) => {
     }
 }
 
+// const follow = async (req, res) => {
+//     try {
+//         const { username } = req.body;
+//         const mySelf = req.user.username;
+
+//         if (!username) {
+//             res.status(400).json({ msg: "user is required to get followed" });
+//         }
+//         const user = await Student.findOneAndUpdate({ username }, {
+//             $addToSet: { follower: mySelf }
+//         }, { new: true });
+
+
+//         const myself = await Student.findOneAndUpdate({ username: mySelf }, {
+//             $addToSet: {
+//                 following: username
+//             }
+//         }, { new: true });
+
+
+//         res.status(200).json({
+//             usermsg: user,
+//             myuser: myself,
+//         });
+
+//     } catch (error) {
+//         res.status(500).json({
+//             msg: error.message
+//         });
+//     }
+// }
+
+
 const follow = async (req, res) => {
     try {
         const { username } = req.body;
         const mySelf = req.user.username;
 
         if (!username) {
-            res.status(400).json({ msg: "user is required to get followed" });
+            return res.status(400).json({ msg: "Username is required." });
         }
-        const user = await Student.findOneAndUpdate({ username }, {
-            $addToSet: { follower: mySelf }
-        }, { new: true });
 
+        if (username === mySelf) {
+            return res.status(400).json({ msg: "You cannot follow/unfollow yourself." });
+        }
 
-        const myself = await Student.findOneAndUpdate({ username: mySelf }, {
-            $addToSet: {
-                following: username
-            }
-        }, { new: true });
+        const targetUser = await Student.findOne({ username });
+        const currentUser = await Student.findOne({ username: mySelf });
 
+        if (!targetUser || !currentUser) {
+            return res.status(404).json({ msg: "User not found." });
+        }
 
-        res.status(200).json({
-            usermsg: user,
-            myuser: myself,
-        });
+        const isFollowing = currentUser.following.includes(username);
+
+        let updatedTarget, updatedCurrent;
+
+        if (isFollowing) {
+            // Unfollow
+            updatedTarget = await Student.findOneAndUpdate(
+                { username },
+                { $pull: { follower: mySelf } },
+                { new: true }
+            );
+
+            updatedCurrent = await Student.findOneAndUpdate(
+                { username: mySelf },
+                { $pull: { following: username } },
+                { new: true }
+            );
+
+            return res.status(200).json({
+                msg: `Unfollowed ${username}`,
+                usermsg: updatedTarget,
+                myuser: updatedCurrent
+            });
+        } else {
+            // Follow
+            updatedTarget = await Student.findOneAndUpdate(
+                { username },
+                { $addToSet: { follower: mySelf } },
+                { new: true }
+            );
+
+            updatedCurrent = await Student.findOneAndUpdate(
+                { username: mySelf },
+                { $addToSet: { following: username } },
+                { new: true }
+            );
+
+            return res.status(200).json({
+                msg: `Followed ${username}`,
+                usermsg: updatedTarget,
+                myuser: updatedCurrent
+            });
+        }
 
     } catch (error) {
-        res.status(500).json({
-            msg: error.message
-        });
+        res.status(500).json({ msg: error.message });
     }
-}
-
+};
 
 
 
