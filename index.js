@@ -12,7 +12,6 @@ app.use(cors());
 
 const mongo = process.env.MONGO
 mongoose.connect(mongo, {
-
 }).then(() => {
   console.log('db is connected');
 

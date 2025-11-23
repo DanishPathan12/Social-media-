@@ -32,12 +32,12 @@ const Register = async (req, res) => {
             photo: photoPath,
             password: hashedPw,
             otp,
-            isVerified: false
+            isVerified: true
         });
 
         await newStudent.save();
-        await sendEmail({ userEmail: email, otp });
-        return res.status(201).json({ msg: "OTP is sent for verification" });
+        // await sendEmail({ userEmail: email, otp });
+        return res.status(201).json({ msg: " verification" });
 
     } catch (error) {
         console.error(error);
@@ -54,9 +54,9 @@ const Login = async (req, res) => {
             return res.status(400).json({ msg: "Email or password is incorrect" });
         }
 
-        if (!user.isVerified) {
-            return res.status(400).json({ msg: "Please verify your email before logging in" });
-        }
+        // if (!user.isVerified) {
+        //     return res.status(400).json({ msg: "Please verify your email before logging in" });
+        // }
 
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) {
